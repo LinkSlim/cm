@@ -10,6 +10,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -17,17 +18,32 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE-FIREBASE.txt'
+        exclude 'META-INF/NOTICE'
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
+    //testCompile 'junit:junit:4.12' Si descomento esta linea tardará un huevo en ejecutarse la aplicacion
     compile 'com.android.support:appcompat-v7:24.0.0-alpha1'
     compile 'com.google.android.gms:play-services:8.4.0'
     compile 'com.google.android.gms:play-services-ads:8.4.0'
     compile 'com.google.android.gms:play-services-identity:8.4.0'
     compile 'com.google.android.gms:play-services-gcm:8.4.0'
+    //compile 'com.firebase:firebase-client-android:2.5.2+' Si descomento esta, da conflicto con la linea de abajo y no se ejecuta la app. Creo que es redudante.
+    compile files('libs/firebase-client-android-2.5.2.jar')
 }
+
+
+
+
+
+
+
 
 
 
