@@ -1,0 +1,25 @@
+//Partidos en España en un dia dado
+http://www.resultados-futbol.com/scripts/api/api.php?tz=Europe/Madrid&format=xml&req=matchsday&key=aac9f27d384e2a552775d8ce3a4698d8&date=2016-04-16&country=es&play=1
+
+//IDs de Equipos de Liga BBVA
+	Barsa: 		429
+	Madrid: 	2107
+	Atletico:	369
+	Sevilla:	1102
+	Athletic:	347
+	Valencia:	2647
+	Las Palmas:	2563
+	Sporting:	2125
+	Betis:		486
+	Celta:		712
+	Villareal:	2716
+	R. Sociedad:	2120
+	Deportivo:	901
+	Rayo:		214630
+
+
+//Partidos de una serie de equipos dados por sus ID (todos son de la Liga BBVA) en un dia concreto
+http://www.resultados-futbol.com/scripts/api/api.php?tz=Europe/Madrid&format=xml&req=matchsday&key=aac9f27d384e2a552775d8ce3a4698d8&date=2016-04-16&country=es&teams=429,2107,369,1102,347,2647,2563,2125,486,712,2716,2120,901
+
+//Canales que dan partidos de la Liga BBVA un dia determinado
+http://www.resultados-futbol.com/scripts/api/api.php?key=aac9f27d384e2a552775d8ce3a4698d8&format=xml&tz=Europe/Madrid&lang=es&rm=1&req=tv_channel_matches&date=2016-04-16&init=0&filter=Liga%20BBVA
