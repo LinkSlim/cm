@@ -48,7 +48,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Firebase.setAndroidContext(this);
         Firebase myFirebaseRef = new Firebase("https://appjj.firebaseio.com/");
         //myFirebaseRef.child("message").setValue("Do you have data? You'll love Firebase.");
-        myFirebaseRef.child("message").child("otro2").addValueEventListener(new ValueEventListener() { //Agrego un listener al dato llamado "message"
+        /*myFirebaseRef.child("message").child("otro2").addValueEventListener(new ValueEventListener() { //Agrego un listener al dato llamado "message"
             @Override
             public void onDataChange(DataSnapshot snapshot) { //Cuando el valor del dato "message" cambia, se ejecuta este codigo
                 System.out.println(snapshot.getValue());  //prints "Do you have data? You'll love Firebase."
@@ -60,7 +60,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onCancelled(FirebaseError error) {
             }
-        });
+        });*/
 
         /*Agrego al boton un Listener para que el boton me lleve a la Activity de PlacePicker al ser pulsado (onClick)*/
         final Button button = (Button) findViewById(R.id.AbrirPlacePicker);
