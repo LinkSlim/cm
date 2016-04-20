@@ -32,6 +32,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, View.OnClickListener {
 
     private static final int PLACE_PICKER_REQUEST = 1;
+    private static final int LISTA_PARTIDOS_REQUEST = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,23 +49,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Firebase.setAndroidContext(this);
         Firebase myFirebaseRef = new Firebase("https://appjj.firebaseio.com/");
         //myFirebaseRef.child("message").setValue("Do you have data? You'll love Firebase.");
-        /*myFirebaseRef.child("message").child("otro2").addValueEventListener(new ValueEventListener() { //Agrego un listener al dato llamado "message"
-            @Override
-            public void onDataChange(DataSnapshot snapshot) { //Cuando el valor del dato "message" cambia, se ejecuta este codigo
-                System.out.println(snapshot.getValue());  //prints "Do you have data? You'll love Firebase."
-                Toast toast = Toast.makeText(getBaseContext(), snapshot.getValue().toString(), Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
-                toast.show();
-            }
-
-            @Override
-            public void onCancelled(FirebaseError error) {
-            }
-        });*/
+//        myFirebaseRef.child("message").child("otro2").addValueEventListener(new ValueEventListener() { //Agrego un listener al dato llamado "message"
+//            @Override
+//            public void onDataChange(DataSnapshot snapshot) { //Cuando el valor del dato "message" cambia, se ejecuta este codigo
+//                System.out.println(snapshot.getValue());  //prints "Do you have data? You'll love Firebase."
+//                Toast toast = Toast.makeText(getBaseContext(), snapshot.getValue().toString(), Toast.LENGTH_LONG);
+//                toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+//                toast.show();
+//            }
+//
+//            @Override
+//            public void onCancelled(FirebaseError error) {
+//            }
+//        });
 
         /*Agrego al boton un Listener para que el boton me lleve a la Activity de PlacePicker al ser pulsado (onClick)*/
-        final Button button = (Button) findViewById(R.id.AbrirPlacePicker);
-        button.setOnClickListener(this);
+        final Button botonPlacePicker = (Button) findViewById(R.id.AbrirPlacePicker);
+        final Button botonListaPartidos = (Button) findViewById(R.id.AbrirListaPartidos);
+        botonPlacePicker.setOnClickListener(this);
+        botonListaPartidos.setOnClickListener(this);
 
 
     }
@@ -129,6 +132,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 break;
 
+            case R.id.AbrirListaPartidos:
+                Intent i = new Intent(this, ListaPartidos.class );
+                startActivityForResult(i, LISTA_PARTIDOS_REQUEST);
+
             default:
                 break;
         }
@@ -140,6 +147,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Place place = PlacePicker.getPlace(data, this);
                 String toastMsg = String.format("Place: %s, ID: %s, Direccion: %s", place.getName(), place.getId(), place.getAddress());
                 Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
+            }
+        }
+
+        if (requestCode == LISTA_PARTIDOS_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                //Hacer cosas
             }
         }
     }
