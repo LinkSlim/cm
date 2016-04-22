@@ -72,20 +72,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Double latitud = 0.0, longitud = 0.0;
                 LatLng ll;
 
-                if (s == null)
+                if (s == null) //'s' es el nombre de la key del elemento que se añadio en la llamada anterior
                     s = "S";
 
-                String cadena = (String) dataSnapshot.getValue();
-                latylang = cadena.split(",");
+                String cadena = (String) dataSnapshot.getValue();   //Saco el valor del nodo actual
+                latylang = cadena.split(","); //Separo la cadena en dos (son las coordenadas de una posicion)
                 x = latylang[0].trim();
                 y = latylang[1].trim();
-                latitud = Double.parseDouble(latylang[0]);
+                latitud = Double.parseDouble(latylang[0]); //Convierto las cadenas en Double
                 longitud = Double.parseDouble(latylang[1]);
                 ll = new LatLng(latitud,longitud);
-                listaPosiciones.add(ll);
-                addMarca(mapa, ll, latylang[0]+", "+latylang[1]);
+                listaPosiciones.add(ll);  //Añado el LatLng a una lista de poisicione (seguramente no lo use)
+                addMarca(mapa, ll, latylang[0]+", "+latylang[1]);   //Añado una marca al mapa con la posicion creada
 
-                Log.i("POS X", s);
+                Log.i("POS X", s);  //Auditoria
                 Log.i("POS Y", s);
             }
 
