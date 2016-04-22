@@ -19,6 +19,7 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.firebase.client.snapshot.DoubleNode;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -32,12 +33,17 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, View.OnClickListener, ChildEventListener
+import java.util.ArrayList;
+import java.util.List;
 
-{
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, View.OnClickListener {
 
     private static final int PLACE_PICKER_REQUEST = 1;
     private static final int LISTA_PARTIDOS_REQUEST = 2;
+    private ArrayList<Partido> listaPartidosViejos = new ArrayList<Partido>();
+    private ArrayList<Partido> listaPartidosNuevos = new ArrayList<Partido>();
+    private ArrayList<LatLng> listaPosiciones = new ArrayList<LatLng>();
+    private GoogleMap mapa;
 
 
     @Override
@@ -53,7 +59,58 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
          * En este caso se esta realizando una lectura de un dato alojado en Firebase
          **/
         Firebase.setAndroidContext(this);
-        Firebase myFirebaseRef = new Firebase("https://appjj.firebaseio.com/");
+        Firebase myFirebaseRef = new Firebase("https://appjj.firebaseio.com/posiciones");
+
+
+        myFirebaseRef.addChildEventListener(new ChildEventListener() {
+
+            //onChildAdded() se llama para una vez para cada hijo existente de forma secuencial en el DataSnapshot al abrir la aplicacion por primera vez
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                String x, y;
+                String[] latylang;
+                Double latitud = 0.0, longitud = 0.0;
+                LatLng ll;
+
+                if (s == null)
+                    s = "S";
+
+                String cadena = (String) dataSnapshot.getValue();
+                latylang = cadena.split(",");
+                x = latylang[0].trim();
+                y = latylang[1].trim();
+                latitud = Double.parseDouble(latylang[0]);
+                longitud = Double.parseDouble(latylang[1]);
+                ll = new LatLng(latitud,longitud);
+                listaPosiciones.add(ll);
+                addMarca(mapa, ll, latylang[0]+", "+latylang[1]);
+
+                Log.i("POS X", s);
+                Log.i("POS Y", s);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+
         //myFirebaseRef.child("message").setValue("Do you have data? You'll love Firebase.");
 //        myFirebaseRef.child("message").child("otro2").addValueEventListener(new ValueEventListener() { //Agrego un listener al dato llamado "message"
 //            @Override
@@ -80,7 +137,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public Marker addMarca(GoogleMap map, LatLng coordenadas, String titulo){
         Log.i("AÑADIR", "Marca añadida");
         return map.addMarker(new MarkerOptions().position(coordenadas).title(titulo));
-
     }
 
     public void mueveCamara(GoogleMap map, LatLng coordenadas){
@@ -95,11 +151,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onMapReady(GoogleMap map) {
+        mapa = map;
 
         map.setMyLocationEnabled(true); //Activo el boton de Mi Ubicacion
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             map.setOnMyLocationButtonClickListener(this);
         }
+
 
         // Add a marker in Sydney, Australia, and move the camera.
         LatLng sydney = new LatLng(-34, 151);
@@ -107,6 +165,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mueveCamara(map, sydney);
         //borraMarca(marca);
     }
+
+
 
     @Override
     public boolean onMyLocationButtonClick() {
@@ -178,30 +238,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    @Override
-    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
-    }
-
-    @Override
-    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-    }
-
-    @Override
-    public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-    }
-
-    @Override
-    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-    }
-
-    @Override
-    public void onCancelled(FirebaseError firebaseError) {
-
-    }
 }
 
 
