@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +29,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, View.OnClickListener, ChildEventListener
@@ -36,6 +38,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private static final int PLACE_PICKER_REQUEST = 1;
     private static final int LISTA_PARTIDOS_REQUEST = 2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,20 +77,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     }
+    public Marker addMarca(GoogleMap map, LatLng coordenadas, String titulo){
+        Log.i("AÑADIR", "Marca añadida");
+        return map.addMarker(new MarkerOptions().position(coordenadas).title(titulo));
+
+    }
+
+    public void mueveCamara(GoogleMap map, LatLng coordenadas){
+        map.moveCamera(CameraUpdateFactory.newLatLng(coordenadas));
+        Log.i("MOVER", "Camara movida");
+    }
+
+    public void borraMarca(Marker marker){
+        marker.remove();
+        Log.i("BORRAR", "Marca borrada");
+    }
 
     @Override
     public void onMapReady(GoogleMap map) {
 
-        // Add a marker in Sydney, Australia, and move the camera.
-        LatLng sydney = new LatLng(-34, 151);
-        map.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        map.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        //Activo el boton de Mi Ubicacion
-        map.setMyLocationEnabled(true);
+        map.setMyLocationEnabled(true); //Activo el boton de Mi Ubicacion
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            map.setMyLocationEnabled(true);
             map.setOnMyLocationButtonClickListener(this);
         }
+
+        // Add a marker in Sydney, Australia, and move the camera.
+        LatLng sydney = new LatLng(-34, 151);
+        Marker marca = addMarca(map, sydney, "Marca en Sidney");
+        mueveCamara(map, sydney);
+        //borraMarca(marca);
     }
 
     @Override
