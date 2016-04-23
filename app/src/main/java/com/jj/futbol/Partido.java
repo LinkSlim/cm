@@ -34,4 +34,12 @@ public class Partido {
     public Bitmap getEscudoVisitante() {
         return EscudoVisitante;
     }
+
+    @Override
+    public String toString() {
+        return "Partido{" +
+                "Local='" + Local + '\'' +
+                ", Visitante='" + Visitante + '\'' +
+                '}';
+    }
 }
