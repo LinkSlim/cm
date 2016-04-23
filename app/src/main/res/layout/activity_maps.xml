@@ -24,12 +24,12 @@
         android:id="@+id/AbrirPlacePicker"
         android:layout_gravity="left|bottom" />
 
-    <Button
+    <!--<Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Partidos"
         android:id="@+id/AbrirListaPartidos"
-        android:layout_gravity="center_horizontal|bottom" />
+        android:layout_gravity="center_horizontal|bottom" />-->
 
 
 </FrameLayout>

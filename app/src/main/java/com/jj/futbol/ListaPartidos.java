@@ -1,9 +1,11 @@
 package com.jj.futbol;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.provider.Telephony;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,15 +17,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
 public class ListaPartidos extends AppCompatActivity {
-    
+
     public Bitmap imagenHilo;
     private String imageHttpAddress = "http://thumb.resfu.com/img_data/escudos/medium/263.jpg?size=60x&amp;ext=png&amp;lossy=1&amp;1";
-    public ArrayList<Partido> datos = new ArrayList<Partido>();
+    public ArrayList<Partido> listaPartidos = new ArrayList<Partido>();
+    public Partido2 partidoSeleccionado;
+    public Intent output;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,13 +41,13 @@ public class ListaPartidos extends AppCompatActivity {
         //CargaImagenes nuevaTarea = new CargaImagenes();
         //nuevaTarea.execute(imageHttpAddress);
 
-        datos.add(new Partido(BitmapFactory.decodeResource(getResources(), R.drawable.im_colibri), "Arsenal1", "Arsenal2", BitmapFactory.decodeResource(getResources(), R.drawable.im_buho)));
-        datos.add(new Partido(BitmapFactory.decodeResource(getResources(), R.drawable.im_buho), "FC Barcelona", "FC Barcelona B", BitmapFactory.decodeResource(getResources(), R.drawable.im_colibri)));
-        datos.add(new Partido(BitmapFactory.decodeResource(getResources(), R.drawable.im_colibri), "Antena3", "La Sexta", BitmapFactory.decodeResource(getResources(), R.drawable.im_cuervo)));
+        listaPartidos.add(new Partido(BitmapFactory.decodeResource(getResources(), R.drawable.im_colibri), "Arsenal1", "Arsenal2", BitmapFactory.decodeResource(getResources(), R.drawable.im_buho)));
+        listaPartidos.add(new Partido(BitmapFactory.decodeResource(getResources(), R.drawable.im_buho), "FC Barcelona", "FC Barcelona B", BitmapFactory.decodeResource(getResources(), R.drawable.im_colibri)));
+        listaPartidos.add(new Partido(BitmapFactory.decodeResource(getResources(), R.drawable.im_colibri), "Antena3", "La Sexta", BitmapFactory.decodeResource(getResources(), R.drawable.im_cuervo)));
 
 
         ListView lista = (ListView) findViewById(R.id.listaPartidos);
-        lista.setAdapter(new Adaptador_lista(this, R.layout.entrada, datos){
+        lista.setAdapter(new Adaptador_lista(this, R.layout.entrada, listaPartidos){
             @Override
             public void onEntrada(Object entrada, View view) {
                 ImageView escudoLocal = (ImageView) view.findViewById(R.id.imageEquipoLocal);
@@ -63,9 +68,14 @@ public class ListaPartidos extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> pariente, View view, int posicion, long id) {
                 Partido elegido = (Partido) pariente.getItemAtPosition(posicion);
+                partidoSeleccionado = new Partido2(elegido.getLocal(), elegido.getVisitante());
+                //Toast.makeText(ListaPartidos.this, texto, Toast.LENGTH_LONG).show();
+                //Log.i("PARTIDO", partidoSeleccionado.toString());
+                output = new Intent(getApplicationContext(), Partido2.class);
+                output.putExtra("p", partidoSeleccionado);
+                setResult(RESULT_OK, output);
+                finish();
 
-                CharSequence texto = "Seleccionado: " + elegido.getLocal() + " - " + elegido.getVisitante();
-                Toast.makeText(ListaPartidos.this, texto, Toast.LENGTH_LONG).show();
             }
         });
     }

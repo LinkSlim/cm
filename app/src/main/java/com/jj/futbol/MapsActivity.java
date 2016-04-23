@@ -38,12 +38,14 @@ import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, View.OnClickListener {
 
-    private static final int PLACE_PICKER_REQUEST = 1;
-    private static final int LISTA_PARTIDOS_REQUEST = 2;
+    public static final int PLACE_PICKER_REQUEST = 1;
+    public static final int LISTA_PARTIDOS_REQUEST = 2;
     private ArrayList<Partido> listaPartidosViejos = new ArrayList<Partido>();
     private ArrayList<Partido> listaPartidosNuevos = new ArrayList<Partido>();
     private ArrayList<LatLng> listaPosiciones = new ArrayList<LatLng>();
     private GoogleMap mapa;
+    private Firebase myFirebaseRef;
+    public Lugar lugar = new Lugar();
 
 
     @Override
@@ -59,7 +61,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
          * En este caso se esta realizando una lectura de un dato alojado en Firebase
          **/
         Firebase.setAndroidContext(this);
-        Firebase myFirebaseRef = new Firebase("https://appjj.firebaseio.com/posiciones");
+        myFirebaseRef = new Firebase("https://appjj.firebaseio.com/posiciones");
 
 
         myFirebaseRef.addChildEventListener(new ChildEventListener() {
@@ -82,7 +84,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 latitud = Double.parseDouble(latylang[0]); //Convierto las cadenas en Double
                 longitud = Double.parseDouble(latylang[1]);
                 ll = new LatLng(latitud,longitud);
-                listaPosiciones.add(ll);  //Añado el LatLng a una lista de poisicione (seguramente no lo use)
+                //listaPosiciones.add(ll);  //Añado el LatLng a una lista de poisicione (seguramente no lo use)
                 addMarca(mapa, ll, latylang[0]+", "+latylang[1]);   //Añado una marca al mapa con la posicion creada
 
                 Log.i("POS X", s);  //Auditoria
@@ -128,9 +130,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         /*Agrego al boton un Listener para que el boton me lleve a la Activity de PlacePicker al ser pulsado (onClick)*/
         final Button botonPlacePicker = (Button) findViewById(R.id.AbrirPlacePicker);
-        final Button botonListaPartidos = (Button) findViewById(R.id.AbrirListaPartidos);
+        //final Button botonListaPartidos = (Button) findViewById(R.id.AbrirListaPartidos);
         botonPlacePicker.setOnClickListener(this);
-        botonListaPartidos.setOnClickListener(this);
+        //botonListaPartidos.setOnClickListener(this);
 
 
     }
@@ -160,9 +162,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         // Add a marker in Sydney, Australia, and move the camera.
-        LatLng sydney = new LatLng(-34, 151);
-        Marker marca = addMarca(map, sydney, "Marca en Sidney");
-        mueveCamara(map, sydney);
+        LatLng sevilla = new LatLng(37.388986, -5.984540);
+        Marker marca = addMarca(map, sevilla, "Marca en Sidney");
+        mueveCamara(map, sevilla);
         //borraMarca(marca);
     }
 
@@ -213,9 +215,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 break;
 
-//            case R.id.AbrirListaPartidos:
-//                Intent i = new Intent(this, ListaPartidos.class );
-//                startActivityForResult(i, LISTA_PARTIDOS_REQUEST);
+/*            case R.id.AbrirListaPartidos:
+                Intent i = new Intent(this, ListaPartidos.class );
+                startActivityForResult(i, LISTA_PARTIDOS_REQUEST);*/
 
             default:
                 break;
@@ -223,11 +225,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, this);
                 //String toastMsg = String.format("Place: %s, ID: %s, Direccion: %s", place.getName(), place.getId(), place.getAddress());
-                Lugar lugar = new Lugar(place.getId(), place.getAddress().toString(), place.getLatLng(), place.getName().toString(), new Partido());
+                lugar = new Lugar(place.getId(), place.getAddress().toString(), place.getLatLng(), place.getName().toString(), new Partido2());
                 Toast.makeText(this, lugar.toString(), Toast.LENGTH_LONG).show();
                 Log.i("LUGAR", lugar.toString());
                 Intent i = new Intent(this, ListaPartidos.class );
@@ -237,7 +241,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         if (requestCode == LISTA_PARTIDOS_REQUEST) {
             if (resultCode == RESULT_OK) {
-                //Sacar Partido de data
+
+                Partido2 partido = (Partido2) data.getSerializableExtra("p");
+                //Toast.makeText(this, partido.toString(), Toast.LENGTH_LONG).show();
+                lugar.setPartido(partido);
+                Log.i("LUGAR", lugar.toString());
+                myFirebaseRef.child(lugar.getId()).setValue(lugar);
             }
         }
     }

@@ -12,14 +12,22 @@ public class Lugar {
     private String direccion;
     private LatLng coordenadas;
     private String nombre;
-    private Partido partido;
+    private Partido2 partido;
 
-    public Lugar(String id, String direccion, LatLng coordenadas, String nombre, Partido partido) {
+    public Lugar(String id, String direccion, LatLng coordenadas, String nombre, Partido2 partido) {
         this.id = id;
         this.direccion = direccion;
         this.coordenadas = coordenadas;
         this.nombre = nombre;
         this.partido = partido;
+    }
+
+    public Lugar() {
+        this.id = "";
+        this.direccion = "";
+        this.coordenadas = new LatLng(0,0);
+        this.nombre = "";
+        this.partido = new Partido2();
     }
 
     public String getId() {
@@ -54,11 +62,11 @@ public class Lugar {
         this.nombre = nombre;
     }
 
-    public Partido getPartido() {
+    public Partido2 getPartido() {
         return partido;
     }
 
-    public void setPartido(Partido partido) {
+    public void setPartido(Partido2 partido) {
         this.partido = partido;
     }
 

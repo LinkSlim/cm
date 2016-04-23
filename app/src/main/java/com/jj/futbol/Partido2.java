@@ -1,36 +1,34 @@
 package com.jj.futbol;
 
 import android.graphics.Bitmap;
-import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.DisplayMetrics;
 
 import java.io.Serializable;
 
 /**
  * Created by Jesus on 21/04/2016.
  */
-public class Partido implements Serializable{
-    private Bitmap EscudoLocal;
+public class Partido2 implements Serializable{
+    private String EscudoLocal;
     private String Local;
     private String Visitante;
-    private Bitmap EscudoVisitante;
+    private String EscudoVisitante;
 
-    public Partido(Bitmap EscudoLocal, String Local, String Visitante, Bitmap EscudoVisitante) {
+    public Partido2(String EscudoLocal, String Local, String Visitante, String EscudoVisitante) {
         this.EscudoLocal = EscudoLocal;
         this.Local = Local;
         this.Visitante = Visitante;
         this.EscudoVisitante = EscudoVisitante;
     }
 
-    public Partido(String local, String visitante) {
+    public Partido2(String local, String visitante) {
         this.EscudoLocal = null;
         this.Local = local;
         this.Visitante = visitante;
         this.EscudoVisitante = null;
     }
 
-    public Partido() {
+    public Partido2() {
         this.EscudoLocal = null;
         this.Local = "";
         this.Visitante = "";
@@ -38,7 +36,7 @@ public class Partido implements Serializable{
     }
 
 
-    public Bitmap getEscudoLocal() {
+    public String getEscudoLocal() {
         return EscudoLocal;
     }
 
@@ -50,7 +48,7 @@ public class Partido implements Serializable{
         return Visitante;
     }
 
-    public Bitmap getEscudoVisitante() {
+    public String getEscudoVisitante() {
         return EscudoVisitante;
     }
 
