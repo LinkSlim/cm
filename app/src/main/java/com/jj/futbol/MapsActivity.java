@@ -29,6 +29,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -151,7 +152,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
     public Marker addMarca(GoogleMap map, LatLng coordenadas, String titulo){
         Log.i("AÑADIR", "Marca añadida");
-        return map.addMarker(new MarkerOptions().position(coordenadas).title(titulo));
+        return map.addMarker(new MarkerOptions().position(coordenadas).title(titulo).icon(BitmapDescriptorFactory.fromResource(R.drawable.im_ball3)));
     }
 
     public void mueveCamara(GoogleMap map, LatLng coordenadas){
