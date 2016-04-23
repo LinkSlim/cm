@@ -1,6 +1,7 @@
 package com.jj.futbol;
 
 import android.graphics.Bitmap;
+import android.util.DisplayMetrics;
 
 /**
  * Created by Jesus on 21/04/2016.
@@ -16,7 +17,13 @@ public class Partido {
         this.Local = Local;
         this.Visitante = Visitante;
         this.EscudoVisitante = EscudoVisitante;
+    }
 
+    public Partido() {
+        this.EscudoLocal = null;
+        this.Local = "";
+        this.Visitante = "";
+        this.EscudoVisitante = null;
     }
 
     public Bitmap getEscudoLocal() {

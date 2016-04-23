@@ -213,9 +213,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 break;
 
-            case R.id.AbrirListaPartidos:
-                Intent i = new Intent(this, ListaPartidos.class );
-                startActivityForResult(i, LISTA_PARTIDOS_REQUEST);
+//            case R.id.AbrirListaPartidos:
+//                Intent i = new Intent(this, ListaPartidos.class );
+//                startActivityForResult(i, LISTA_PARTIDOS_REQUEST);
 
             default:
                 break;
@@ -226,14 +226,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (requestCode == PLACE_PICKER_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, this);
-                String toastMsg = String.format("Place: %s, ID: %s, Direccion: %s", place.getName(), place.getId(), place.getAddress());
-                Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
+                //String toastMsg = String.format("Place: %s, ID: %s, Direccion: %s", place.getName(), place.getId(), place.getAddress());
+                Lugar lugar = new Lugar(place.getId(), place.getAddress().toString(), place.getLatLng(), place.getName().toString(), new Partido());
+                Toast.makeText(this, lugar.toString(), Toast.LENGTH_LONG).show();
+                Log.i("LUGAR", lugar.toString());
+                Intent i = new Intent(this, ListaPartidos.class );
+                startActivityForResult(i, LISTA_PARTIDOS_REQUEST);
             }
         }
 
         if (requestCode == LISTA_PARTIDOS_REQUEST) {
             if (resultCode == RESULT_OK) {
-                //Hacer cosas
+                //Sacar Partido de data
             }
         }
     }
