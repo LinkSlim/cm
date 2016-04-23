@@ -34,7 +34,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, View.OnClickListener {
 
@@ -69,12 +71,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             //onChildAdded() se llama para una vez para cada hijo existente de forma secuencial en el DataSnapshot al abrir la aplicacion por primera vez
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                String x, y;
-                String[] latylang;
-                Double latitud = 0.0, longitud = 0.0;
+                //String nombre, direccion, lalitud, longitud, local, visitante;
+                String[] atributos;
+                Double lati = 0.0, longi = 0.0;
                 LatLng ll;
 
                 if (s == null) //'s' es el nombre de la key del elemento que se añadio en la llamada anterior
+                    s = "S";
+
+                String chorizo = (String) dataSnapshot.getValue();   //Saco el valor del nodo actual
+                atributos = chorizo.split("¡"); //Separo la cadena en dos (son las coordenadas de una posicion)
+                lati = Double.parseDouble(atributos[2]);
+                longi = Double.parseDouble(atributos[3]);
+                ll = new LatLng(lati,longi);
+
+                addMarca(mapa, ll, atributos[4] + " - "+ atributos[5]);   //Añado una marca al mapa con la posicion creada
+
+/*                if (s == null) //'s' es el nombre de la key del elemento que se añadio en la llamada anterior
                     s = "S";
 
                 String cadena = (String) dataSnapshot.getValue();   //Saco el valor del nodo actual
@@ -88,7 +101,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 addMarca(mapa, ll, latylang[0]+", "+latylang[1]);   //Añado una marca al mapa con la posicion creada
 
                 Log.i("POS X", s);  //Auditoria
-                Log.i("POS Y", s);
+                Log.i("POS Y", s);*/
             }
 
             @Override
@@ -163,7 +176,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Add a marker in Sydney, Australia, and move the camera.
         LatLng sevilla = new LatLng(37.388986, -5.984540);
-        Marker marca = addMarca(map, sevilla, "Marca en Sidney");
+        //Marker marca = addMarca(map, sevilla, "Marca en Sevilla");
         mueveCamara(map, sevilla);
         //borraMarca(marca);
     }
@@ -232,7 +245,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Place place = PlacePicker.getPlace(data, this);
                 //String toastMsg = String.format("Place: %s, ID: %s, Direccion: %s", place.getName(), place.getId(), place.getAddress());
                 lugar = new Lugar(place.getId(), place.getAddress().toString(), place.getLatLng(), place.getName().toString(), new Partido2());
-                Toast.makeText(this, lugar.toString(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(this, lugar.toString(), Toast.LENGTH_LONG).show();
                 Log.i("LUGAR", lugar.toString());
                 Intent i = new Intent(this, ListaPartidos.class );
                 startActivityForResult(i, LISTA_PARTIDOS_REQUEST);
@@ -246,10 +259,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 //Toast.makeText(this, partido.toString(), Toast.LENGTH_LONG).show();
                 lugar.setPartido(partido);
                 Log.i("LUGAR", lugar.toString());
-                myFirebaseRef.child(lugar.getId()).setValue(lugar);
+                myFirebaseRef.child(lugar.getId()).setValue(lugar.getNombre() +"¡"+ lugar.getDireccion() +"¡"+ lugar.getCoordenadas().latitude +"¡"+ lugar.getCoordenadas().longitude +"¡"+ lugar.getPartido().getLocal() +"¡"+ lugar.getPartido().getVisitante());
             }
         }
     }
+
 
 }
 
