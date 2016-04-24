@@ -20,7 +20,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="PlacePicker"
+        android:text="+ Añadir Partido"
         android:id="@+id/AbrirPlacePicker"
         android:layout_gravity="left|bottom" />
 

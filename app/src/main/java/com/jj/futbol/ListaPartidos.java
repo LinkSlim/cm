@@ -34,6 +34,7 @@ public class ListaPartidos extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lista_partidos);
+        setTitle(getResources().getText(R.string.title_lista_partidos));  //Cambio el titulo de la pantalla
 
 
 

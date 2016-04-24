@@ -86,7 +86,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 longi = Double.parseDouble(atributos[3]);
                 ll = new LatLng(lati,longi);
 
-                addMarca(mapa, ll, atributos[4] + " - "+ atributos[5]);   //Añado una marca al mapa con la posicion creada
+                addMarca(mapa, ll, atributos[4] + " - "+ atributos[5], atributos[0]);   //Añado una marca al mapa con la posicion creada
 
 /*                if (s == null) //'s' es el nombre de la key del elemento que se añadio en la llamada anterior
                     s = "S";
@@ -150,9 +150,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     }
-    public Marker addMarca(GoogleMap map, LatLng coordenadas, String titulo){
+    public Marker addMarca(GoogleMap map, LatLng coordenadas, String titulo, String snippet){
         Log.i("AÑADIR", "Marca añadida");
-        return map.addMarker(new MarkerOptions().position(coordenadas).title(titulo).icon(BitmapDescriptorFactory.fromResource(R.drawable.im_ball3)));
+        return map.addMarker(new MarkerOptions().position(coordenadas).title(titulo).snippet(snippet).icon(BitmapDescriptorFactory.fromResource(R.drawable.im_ball3)));
     }
 
     public void mueveCamara(GoogleMap map, LatLng coordenadas){
@@ -261,6 +261,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 lugar.setPartido(partido);
                 Log.i("LUGAR", lugar.toString());
                 myFirebaseRef.child(lugar.getId()).setValue(lugar.getNombre() +"¡"+ lugar.getDireccion() +"¡"+ lugar.getCoordenadas().latitude +"¡"+ lugar.getCoordenadas().longitude +"¡"+ lugar.getPartido().getLocal() +"¡"+ lugar.getPartido().getVisitante());
+                mueveCamara(mapa, lugar.getCoordenadas());
+                Toast.makeText(this, "Partido añadido correctamente", Toast.LENGTH_LONG).show();
             }
         }
     }
