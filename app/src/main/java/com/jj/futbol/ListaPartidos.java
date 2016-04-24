@@ -36,9 +36,7 @@ public class ListaPartidos extends AppCompatActivity{
     public ArrayList<Partido> listaPartidos = new ArrayList<Partido>();
     public Partido2 partidoSeleccionado;
     public Intent output;
-    public String js;
-    public String web = "http://www.resultados-futbol.com/scripts/api/api.php?key=aac9f27d384e2a552775d8ce3a4698d8&format=json&tz=Europe/Madrid&lang=es&rm=1&req=tv_channel_matches&date=2016-04-25&init=0&filter=Liga%20BBVA";
-    public String chivato = "";
+    public String web = "http://www.resultados-futbol.com/scripts/api/api.php?key=aac9f27d384e2a552775d8ce3a4698d8&format=json&tz=Europe/Madrid&lang=es&rm=1&req=tv_channel_matches&date=2016-04-24&init=0&filter=Liga%20BBVA";
     public Bitmap escudoLocal, escudoVisitante;
 
     @Override
@@ -47,16 +45,8 @@ public class ListaPartidos extends AppCompatActivity{
         setContentView(R.layout.lista_partidos);
         setTitle(getResources().getText(R.string.title_lista_partidos));  //Cambio el titulo de la pantalla
 
-
-        //new ReadWeatherJSONFeedTask().execute(web);
-
-
-        /*CargaImagenes descargaImagen = new CargaImagenes();
-        descargaImagen.execute(imageHttpAddress);*/
-
         DescargaJson descargaJson = new DescargaJson();
         descargaJson.execute(web);
-
 
     }
 
@@ -151,13 +141,13 @@ public class ListaPartidos extends AppCompatActivity{
                         visitor_shield = match.getString("visitor_shield");
                         hour = match.getString("hour");
                         minute = match.getString("minute");
-                    }
 
-                    //Descargo los escudos
-                    CargaImagenes descargaImagen = new CargaImagenes();
-                    descargaImagen.execute(local_shield, visitor_shield);
-                    partido = new Partido(escudoLocal, local, visitor, escudoVisitante);
-                    listaPartidos.add(partido);
+                        //Descargo los escudos
+                        CargaImagenes descargaImagen = new CargaImagenes();
+                        descargaImagen.execute(local_shield, visitor_shield);
+                        partido = new Partido(escudoLocal, local, visitor, escudoVisitante);
+                        listaPartidos.add(partido);
+                    }
                 }
 
                 ListView lista = (ListView) findViewById(R.id.listaPartidos);
@@ -195,7 +185,7 @@ public class ListaPartidos extends AppCompatActivity{
                 Toast.makeText(getBaseContext(), "JSON PARSEADO!", Toast.LENGTH_SHORT).show();
                 Log.i("JESUS", "ESTOY EN ONPOSTEXECUTE");
             } catch (Exception e) {
-                Log.d("ReadWeatherJSONFeedTask", e.getLocalizedMessage());
+                Log.d("JESUS", "HUBO UNA EXCEPCION");
             }
 
         }
