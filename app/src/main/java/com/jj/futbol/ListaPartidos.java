@@ -29,7 +29,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class ListaPartidos extends Activity{
 
@@ -37,7 +39,7 @@ public class ListaPartidos extends Activity{
     public ArrayList<Partido> listaPartidos = new ArrayList<Partido>();
     public Partido2 partidoSeleccionado;
     public Intent output;
-    public String web = "http://www.resultados-futbol.com/scripts/api/api.php?key=aac9f27d384e2a552775d8ce3a4698d8&format=json&tz=Europe/Madrid&lang=es&rm=1&req=tv_channel_matches&date=2016-04-24&init=0&filter=Liga%20BBVA";
+    public String web = "";
     public Bitmap escudoLocal, escudoVisitante;
     public ProgressDialog pDialog;
 
@@ -47,8 +49,8 @@ public class ListaPartidos extends Activity{
         setContentView(R.layout.lista_partidos);
         setTitle(getResources().getText(R.string.title_lista_partidos));  //Cambio el titulo de la pantalla
 
-
-
+        //Cojo los partido de la fecha de hoy
+        web = "http://www.resultados-futbol.com/scripts/api/api.php?key=aac9f27d384e2a552775d8ce3a4698d8&format=json&tz=Europe/Madrid&lang=es&rm=1&req=tv_channel_matches&date=" + getFecha("yyyy-MM-dd") + "&init=0&filter=Liga%20BBVA";
         DescargaJson descargaJson = new DescargaJson();
         descargaJson.execute(web);
 
@@ -57,7 +59,13 @@ public class ListaPartidos extends Activity{
     }
 
 
-
+    private String getFecha(String formato){
+        Calendar cal = Calendar.getInstance();
+        //cal.add(Calendar.DATE, 1);
+        SimpleDateFormat format1 = new SimpleDateFormat(formato); //"yyyy-MM-dd"
+        return format1.format(cal.getTime());
+        // Output "YYYY-MM-DD"
+    }
 
     private class DescargaJson extends AsyncTask<String, Void, String> {
 
