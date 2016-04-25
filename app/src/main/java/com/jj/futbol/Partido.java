@@ -62,5 +62,26 @@ public class Partido implements Serializable{
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
+        Partido partido = (Partido) o;
+
+        if (!Local.equals(partido.Local)) return false;
+        if (!Visitante.equals(partido.Visitante)) return false;
+        return true;
+
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 1;
+        result = 31 * result + Local.hashCode();
+        result = 31 * result + Visitante.hashCode();
+
+        return result;
+    }
 }

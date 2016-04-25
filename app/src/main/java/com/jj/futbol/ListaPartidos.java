@@ -32,11 +32,13 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ListaPartidos extends Activity{
 
     private String imageHttpAddress = "http://thumb.resfu.com/img_data/escudos/medium/263.jpg?size=60x&amp;ext=png&amp;lossy=1&amp;1";
-    public ArrayList<Partido> listaPartidos = new ArrayList<Partido>();
+    public Set<Partido> listaPartidos = new HashSet<Partido>();
     public Partido2 partidoSeleccionado;
     public Intent output;
     public String web = "";
@@ -59,10 +61,9 @@ public class ListaPartidos extends Activity{
     }
 
 
-    private String getFecha(String formato){
+    private String getFecha(String formato){ //formato de la API "yyyy-MM-dd"
         Calendar cal = Calendar.getInstance();
-        //cal.add(Calendar.DATE, 1);
-        SimpleDateFormat format1 = new SimpleDateFormat(formato); //"yyyy-MM-dd"
+        SimpleDateFormat format1 = new SimpleDateFormat(formato);
         return format1.format(cal.getTime());
         // Output "YYYY-MM-DD"
     }
@@ -205,8 +206,6 @@ public class ListaPartidos extends Activity{
             Partido partido;
             int i = 0, j = 0;
 
-
-
             try {
                 JSONObject jsonObject = new JSONObject(result);
                 JSONArray tv_matches = jsonObject.getJSONArray("tv_matches");
@@ -225,10 +224,13 @@ public class ListaPartidos extends Activity{
                         minute = match.getString("minute");
 
                         //Descargo los escudos
-                        CargaImagenes descargaImagen = new CargaImagenes();
-                        descargaImagen.execute(local_shield, visitor_shield);
+                        //CargaImagenes descargaImagen = new CargaImagenes();
+                        //descargaImagen.execute(local_shield, visitor_shield);
                         partido = new Partido(cogeEscudo(local), local, visitor, cogeEscudo(visitor));
-                        listaPartidos.add(partido);
+                        if(!listaPartidos.contains(partido)){
+                            listaPartidos.add(partido);
+                        }
+
                     }
 
                 }
@@ -239,7 +241,7 @@ public class ListaPartidos extends Activity{
                 //pDialog.dismiss();
 
                 ListView lista = (ListView) findViewById(R.id.listaPartidos);
-                lista.setAdapter(new Adaptador_lista(getApplicationContext(), R.layout.entrada, listaPartidos){
+                lista.setAdapter(new Adaptador_lista(getApplicationContext(), R.layout.entrada, new ArrayList<Partido>(listaPartidos)){
                     @Override
                     public void onEntrada(Object entrada, View view) {
                         ImageView escudoLocal = (ImageView) view.findViewById(R.id.imageEquipoLocal);
