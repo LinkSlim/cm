@@ -1,5 +1,6 @@
 package com.jj.futbol;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -30,7 +31,7 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class ListaPartidos extends AppCompatActivity{
+public class ListaPartidos extends Activity{
 
     private String imageHttpAddress = "http://thumb.resfu.com/img_data/escudos/medium/263.jpg?size=60x&amp;ext=png&amp;lossy=1&amp;1";
     public ArrayList<Partido> listaPartidos = new ArrayList<Partido>();
@@ -38,6 +39,7 @@ public class ListaPartidos extends AppCompatActivity{
     public Intent output;
     public String web = "http://www.resultados-futbol.com/scripts/api/api.php?key=aac9f27d384e2a552775d8ce3a4698d8&format=json&tz=Europe/Madrid&lang=es&rm=1&req=tv_channel_matches&date=2016-04-24&init=0&filter=Liga%20BBVA";
     public Bitmap escudoLocal, escudoVisitante;
+    public ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,15 +47,14 @@ public class ListaPartidos extends AppCompatActivity{
         setContentView(R.layout.lista_partidos);
         setTitle(getResources().getText(R.string.title_lista_partidos));  //Cambio el titulo de la pantalla
 
+
+
         DescargaJson descargaJson = new DescargaJson();
         descargaJson.execute(web);
 
+
+
     }
-
-
-
-
-
 
 
 
@@ -61,10 +62,11 @@ public class ListaPartidos extends AppCompatActivity{
     private class DescargaJson extends AsyncTask<String, Void, String> {
 
         protected void onPreExecute() {
-            /*super.onPreExecute();
-            try{
+            super.onPreExecute();
+            //pDialog = ProgressDialog.show(getApplicationContext(), "Procesando", "Espere unos segundos...", true, false);
+            /*try{
                 pDialog = new ProgressDialog(getApplicationContext());
-                pDialog.setMessage("Descargando datos");
+                pDialog.setMessage("Cargando Imagen");
                 pDialog.setCancelable(true);
                 pDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 pDialog.show();
@@ -115,6 +117,76 @@ public class ListaPartidos extends AppCompatActivity{
             return body;
         }
 
+        private Bitmap cogeEscudo(String nombreEquipo){
+            Bitmap b = null;
+
+            switch (nombreEquipo){
+                case "Athletic":
+                    b = BitmapFactory.decodeResource(getResources(), R.drawable.athletic);
+                    break;
+                case "Atlético":
+                    b = BitmapFactory.decodeResource(getResources(), R.drawable.atletico);
+                    break;
+                case "Barcelona":
+                    b = BitmapFactory.decodeResource(getResources(), R.drawable.barcelona);
+                    break;
+                case "Real Betis":
+                    b = BitmapFactory.decodeResource(getResources(), R.drawable.betis);
+                    break;
+                case "Celta":
+                    b = BitmapFactory.decodeResource(getResources(), R.drawable.celta);
+                    break;
+                case "Deportivo":
+                    b = BitmapFactory.decodeResource(getResources(), R.drawable.deportivo);
+                    break;
+                case "Eibar":
+                    b = BitmapFactory.decodeResource(getResources(), R.drawable.eibar);
+                    break;
+                case "Espanyol":
+                    b = BitmapFactory.decodeResource(getResources(), R.drawable.espanyol);
+                    break;
+                case "Getafe":
+                    b = BitmapFactory.decodeResource(getResources(), R.drawable.getafe);
+                    break;
+                case "Granada":
+                    b = BitmapFactory.decodeResource(getResources(), R.drawable.granada);
+                    break;
+                case "Levante":
+                    b = BitmapFactory.decodeResource(getResources(), R.drawable.levante);
+                    break;
+                case "Málaga":
+                    b = BitmapFactory.decodeResource(getResources(), R.drawable.malaga);
+                    break;
+                case "Las Palmas":
+                    b = BitmapFactory.decodeResource(getResources(), R.drawable.palmas);
+                    break;
+                case "Rayo Vallecano":
+                    b = BitmapFactory.decodeResource(getResources(), R.drawable.rayo);
+                    break;
+                case "Real Madrid":
+                    b = BitmapFactory.decodeResource(getResources(), R.drawable.realmadrid);
+                    break;
+                case "R. Sociedad":
+                    b = BitmapFactory.decodeResource(getResources(), R.drawable.realsociedad);
+                    break;
+                case "Sevilla":
+                    b = BitmapFactory.decodeResource(getResources(), R.drawable.sevilla);
+                    break;
+                case "Sporting":
+                    b = BitmapFactory.decodeResource(getResources(), R.drawable.sporting);
+                    break;
+                case "Valencia":
+                    b = BitmapFactory.decodeResource(getResources(), R.drawable.valencia);
+                    break;
+                case "Villarreal":
+                    b = BitmapFactory.decodeResource(getResources(), R.drawable.villareal);
+                    break;
+                default:
+                    b = BitmapFactory.decodeResource(getResources(), R.drawable.es);
+                    break;
+            }
+            return b;
+        }
 
         protected void onPostExecute(String result) {
             String canal = "", local = "", visitor = "", competition_name = "", local_shield = "", visitor_shield = "", hour = "", minute = "";
@@ -124,7 +196,9 @@ public class ListaPartidos extends AppCompatActivity{
             JSONArray matches;
             Partido partido;
             int i = 0, j = 0;
-            //pDialog.dismiss();
+
+
+
             try {
                 JSONObject jsonObject = new JSONObject(result);
                 JSONArray tv_matches = jsonObject.getJSONArray("tv_matches");
@@ -145,10 +219,16 @@ public class ListaPartidos extends AppCompatActivity{
                         //Descargo los escudos
                         CargaImagenes descargaImagen = new CargaImagenes();
                         descargaImagen.execute(local_shield, visitor_shield);
-                        partido = new Partido(escudoLocal, local, visitor, escudoVisitante);
+                        partido = new Partido(cogeEscudo(local), local, visitor, cogeEscudo(visitor));
                         listaPartidos.add(partido);
                     }
+
                 }
+
+                Toast.makeText(getBaseContext(), "JSON PARSEADO!", Toast.LENGTH_SHORT).show();
+                Log.i("JESUS", "ESTOY EN ONPOSTEXECUTE");
+
+                //pDialog.dismiss();
 
                 ListView lista = (ListView) findViewById(R.id.listaPartidos);
                 lista.setAdapter(new Adaptador_lista(getApplicationContext(), R.layout.entrada, listaPartidos){
@@ -182,8 +262,8 @@ public class ListaPartidos extends AppCompatActivity{
                     }
                 });
 
-                Toast.makeText(getBaseContext(), "JSON PARSEADO!", Toast.LENGTH_SHORT).show();
-                Log.i("JESUS", "ESTOY EN ONPOSTEXECUTE");
+                //pDialog.dismiss();
+
             } catch (Exception e) {
                 Log.d("JESUS", "HUBO UNA EXCEPCION");
             }
@@ -200,11 +280,9 @@ public class ListaPartidos extends AppCompatActivity{
 
     private class CargaImagenes extends AsyncTask<String, Void, ArrayList<Bitmap>> {
 
-        ProgressDialog pDialog;
-
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
+            /*super.onPreExecute();
             try{
                 pDialog = new ProgressDialog(getApplicationContext());
                 pDialog.setMessage("Cargando Imagen");
@@ -213,7 +291,7 @@ public class ListaPartidos extends AppCompatActivity{
                 pDialog.show();
             }catch (Exception e){
                 Log.e("ERRRORRR", "ooooooooHHHHHH");
-            }
+            }*/
         }
 
         @Override
@@ -233,9 +311,10 @@ public class ListaPartidos extends AppCompatActivity{
             Bitmap imagen = null;
             try{
                 imageUrl = new URL(imageHttpAddress);
-                HttpURLConnection conn = (HttpURLConnection) imageUrl.openConnection();
-                conn.connect();
-                imagen = BitmapFactory.decodeStream(conn.getInputStream());
+                //HttpURLConnection conn = (HttpURLConnection) imageUrl.openConnection();
+                //conn.connect();
+                //imagen = BitmapFactory.decodeStream(conn.getInputStream());
+                imagen = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
             }catch(IOException ex){
                 ex.printStackTrace();
             }
@@ -248,15 +327,15 @@ public class ListaPartidos extends AppCompatActivity{
         protected void onPostExecute(ArrayList<Bitmap> result) {
             super.onPostExecute(result);
 
-            /*listaPartidos.add(new Partido(BitmapFactory.decodeResource(getResources(), R.drawable.im_colibri), "Arsenal1", "Arsenal2", BitmapFactory.decodeResource(getResources(), R.drawable.im_buho)));
-            listaPartidos.add(new Partido(BitmapFactory.decodeResource(getResources(), R.drawable.im_buho), "FC Barcelona", "FC Barcelona B", BitmapFactory.decodeResource(getResources(), R.drawable.im_colibri)));
-            listaPartidos.add(new Partido(BitmapFactory.decodeResource(getResources(), R.drawable.im_colibri), "Antena3", "La Sexta", BitmapFactory.decodeResource(getResources(), R.drawable.im_cuervo)));*/
+            /*listaPartidos.add(new Partido(BitmapFactory.decodeResource(getResources(), R.drawable.Barcelona), "Arsenal1", "Arsenal2", BitmapFactory.decodeResource(getResources(), R.drawable.Arsenal)));
+            listaPartidos.add(new Partido(BitmapFactory.decodeResource(getResources(), R.drawable.Arsenal), "FC Barcelona", "FC Barcelona B", BitmapFactory.decodeResource(getResources(), R.drawable.Barcelona)));
+            listaPartidos.add(new Partido(BitmapFactory.decodeResource(getResources(), R.drawable.Barcelona), "Antena3", "La Sexta", BitmapFactory.decodeResource(getResources(), R.drawable.Antena3)));*/
             /*listaPartidos.add(new Partido(result, "Sevilla", "Betis", result));
             listaPartidos.add(new Partido(result, "Madrid", "Barsa", result));
             listaPartidos.add(new Partido(result, "Barsa", "Getafe", result));*/
             escudoLocal = result.get(0);
             escudoVisitante = result.get(1);
-            pDialog.dismiss();
+            //pDialog.dismiss();
         }
 
     }
