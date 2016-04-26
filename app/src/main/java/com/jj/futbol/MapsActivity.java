@@ -50,6 +50,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ArrayList<LatLng> listaPosiciones = new ArrayList<LatLng>();
     private GoogleMap mapa;
     private Firebase myFirebaseRef;
+    private ArrayList<Marker> listaMarcas = new ArrayList<Marker>();
     public Lugar lugar = new Lugar();
 
 
@@ -92,7 +93,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                //String nombre, direccion, lalitud, longitud, local, visitante;
+                String[] atributos;
+                Double lati = 0.0, longi = 0.0;
+                LatLng ll;
 
+
+                if (s == null) //'s' es el nombre de la key del elemento que se añadio en la llamada anterior
+                    s = "S";
+
+                String chorizo = (String) dataSnapshot.getValue();   //Saco el valor del nodo actual
+                atributos = chorizo.split("¡"); //Separo la cadena en dos (son las coordenadas de una posicion)
+                lati = Double.parseDouble(atributos[2].trim());
+                longi = Double.parseDouble(atributos[3].trim());
+                ll = new LatLng(lati,longi);
+                sustituyeMarca(mapa, ll, atributos[4] + " - "+ atributos[5], atributos[0], atributos[4]);   //Añado una marca al mapa con la posicion creada
             }
 
             @Override
@@ -138,7 +153,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public Marker addMarca(GoogleMap map, LatLng coordenadas, String titulo, String snippet, String icono){
         Log.i("AÑADIR", "Marca añadida");
         Bitmap b = cogeEscudo(icono);
-        return map.addMarker(new MarkerOptions().position(coordenadas).title(titulo).snippet(snippet).icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b, 30, 30, false))));
+        Marker marker = map.addMarker(new MarkerOptions().position(coordenadas).title(titulo).snippet(snippet).icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b, 30, 30, false))));
+        listaMarcas.add(marker);
+        return marker;
+    }
+
+    public void sustituyeMarca(GoogleMap map, LatLng coordenadas, String titulo, String snippet, String icono){
+        Log.i("JESUS", "Marca sustituida");
+        Bitmap b = cogeEscudo(icono);
+        Boolean existe = false;
+        Marker marcaAEliminar = null;
+        //return map.addMarker(new MarkerOptions().position(coordenadas).title(titulo).snippet(snippet).icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b, 30, 30, false))));
+        for(Marker marca: listaMarcas){
+            if(marca.getPosition().equals(coordenadas)){
+                existe = true;
+                marcaAEliminar = marca;
+                borraMarca(marca);
+                break;
+            }
+        }
+        if(existe)
+            listaMarcas.remove(marcaAEliminar);
+
+        addMarca(map, coordenadas, titulo, snippet, icono);
     }
 
     public void mueveCamara(GoogleMap map, LatLng coordenadas){
