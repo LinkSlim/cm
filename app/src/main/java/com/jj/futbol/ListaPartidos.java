@@ -52,7 +52,7 @@ public class ListaPartidos extends Activity{
         setTitle(getResources().getText(R.string.title_lista_partidos));  //Cambio el titulo de la pantalla
 
         //Cojo los partido de la fecha de hoy
-        web = "http://www.resultados-futbol.com/scripts/api/api.php?key=aac9f27d384e2a552775d8ce3a4698d8&format=json&tz=Europe/Madrid&lang=es&rm=1&req=tv_channel_matches&date=" + getFecha("yyyy-MM-dd") + "&init=0&filter=Liga%20BBVA";
+        web = "http://www.resultados-futbol.com/scripts/api/api.php?key=aac9f27d384e2a552775d8ce3a4698d8&format=json&tz=Europe/Madrid&lang=es&rm=1&req=tv_channel_matches&init=0&filter=Liga%20BBVA";
         DescargaJson descargaJson = new DescargaJson();
         descargaJson.execute(web);
 
@@ -280,12 +280,6 @@ public class ListaPartidos extends Activity{
 
         }
     }
-
-
-
-
-
-
 
 
     private class CargaImagenes extends AsyncTask<String, Void, ArrayList<Bitmap>> {

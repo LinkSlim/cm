@@ -3,6 +3,8 @@ package com.jj.futbol;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -82,27 +84,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 String chorizo = (String) dataSnapshot.getValue();   //Saco el valor del nodo actual
                 atributos = chorizo.split("¡"); //Separo la cadena en dos (son las coordenadas de una posicion)
-                lati = Double.parseDouble(atributos[2]);
-                longi = Double.parseDouble(atributos[3]);
+                lati = Double.parseDouble(atributos[2].trim());
+                longi = Double.parseDouble(atributos[3].trim());
                 ll = new LatLng(lati,longi);
-
-                addMarca(mapa, ll, atributos[4] + " - "+ atributos[5], atributos[0]);   //Añado una marca al mapa con la posicion creada
-
-/*                if (s == null) //'s' es el nombre de la key del elemento que se añadio en la llamada anterior
-                    s = "S";
-
-                String cadena = (String) dataSnapshot.getValue();   //Saco el valor del nodo actual
-                latylang = cadena.split(","); //Separo la cadena en dos (son las coordenadas de una posicion)
-                x = latylang[0].trim();
-                y = latylang[1].trim();
-                latitud = Double.parseDouble(latylang[0]); //Convierto las cadenas en Double
-                longitud = Double.parseDouble(latylang[1]);
-                ll = new LatLng(latitud,longitud);
-                //listaPosiciones.add(ll);  //Añado el LatLng a una lista de poisicione (seguramente no lo use)
-                addMarca(mapa, ll, latylang[0]+", "+latylang[1]);   //Añado una marca al mapa con la posicion creada
-
-                Log.i("POS X", s);  //Auditoria
-                Log.i("POS Y", s);*/
+                addMarca(mapa, ll, atributos[4] + " - "+ atributos[5], atributos[0], atributos[4]);   //Añado una marca al mapa con la posicion creada
             }
 
             @Override
@@ -112,7 +97,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                //mapa.clear();
             }
 
             @Override
@@ -150,9 +135,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     }
-    public Marker addMarca(GoogleMap map, LatLng coordenadas, String titulo, String snippet){
+    public Marker addMarca(GoogleMap map, LatLng coordenadas, String titulo, String snippet, String icono){
         Log.i("AÑADIR", "Marca añadida");
-        return map.addMarker(new MarkerOptions().position(coordenadas).title(titulo).snippet(snippet).icon(BitmapDescriptorFactory.fromResource(R.drawable.im_ball3)));
+        Bitmap b = cogeEscudo(icono);
+        return map.addMarker(new MarkerOptions().position(coordenadas).title(titulo).snippet(snippet).icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b, 30, 30, false))));
     }
 
     public void mueveCamara(GoogleMap map, LatLng coordenadas){
@@ -267,6 +253,76 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    private Bitmap cogeEscudo(String nombreEquipo){
+        Bitmap b = null;
+
+        switch (nombreEquipo){
+            case "Athletic":
+                b = BitmapFactory.decodeResource(getResources(), R.drawable.athletic);
+                break;
+            case "Atlético":
+                b = BitmapFactory.decodeResource(getResources(), R.drawable.atletico);
+                break;
+            case "Barcelona":
+                b = BitmapFactory.decodeResource(getResources(), R.drawable.barcelona);
+                break;
+            case "Real Betis":
+                b = BitmapFactory.decodeResource(getResources(), R.drawable.betis);
+                break;
+            case "Celta":
+                b = BitmapFactory.decodeResource(getResources(), R.drawable.celta);
+                break;
+            case "Deportivo":
+                b = BitmapFactory.decodeResource(getResources(), R.drawable.deportivo);
+                break;
+            case "Eibar":
+                b = BitmapFactory.decodeResource(getResources(), R.drawable.eibar);
+                break;
+            case "Espanyol":
+                b = BitmapFactory.decodeResource(getResources(), R.drawable.espanyol);
+                break;
+            case "Getafe":
+                b = BitmapFactory.decodeResource(getResources(), R.drawable.getafe);
+                break;
+            case "Granada":
+                b = BitmapFactory.decodeResource(getResources(), R.drawable.granada);
+                break;
+            case "Levante":
+                b = BitmapFactory.decodeResource(getResources(), R.drawable.levante);
+                break;
+            case "Málaga":
+                b = BitmapFactory.decodeResource(getResources(), R.drawable.malaga);
+                break;
+            case "Las Palmas":
+                b = BitmapFactory.decodeResource(getResources(), R.drawable.palmas);
+                break;
+            case "Rayo Vallecano":
+                b = BitmapFactory.decodeResource(getResources(), R.drawable.rayo);
+                break;
+            case "Real Madrid":
+                b = BitmapFactory.decodeResource(getResources(), R.drawable.realmadrid);
+                break;
+            case "R. Sociedad":
+                b = BitmapFactory.decodeResource(getResources(), R.drawable.realsociedad);
+                break;
+            case "Sevilla":
+                b = BitmapFactory.decodeResource(getResources(), R.drawable.sevilla);
+                break;
+            case "Sporting":
+                b = BitmapFactory.decodeResource(getResources(), R.drawable.sporting);
+                break;
+            case "Valencia":
+                b = BitmapFactory.decodeResource(getResources(), R.drawable.valencia);
+                break;
+            case "Villarreal":
+                b = BitmapFactory.decodeResource(getResources(), R.drawable.villareal);
+                break;
+            default:
+                b = BitmapFactory.decodeResource(getResources(), R.drawable.es);
+                break;
+        }
+        return b;
+    }
 
 }
 
