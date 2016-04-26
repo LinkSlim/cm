@@ -67,7 +67,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
          * En este caso se esta realizando una lectura de un dato alojado en Firebase
          **/
         Firebase.setAndroidContext(this);
-        myFirebaseRef = new Firebase("https://appjj.firebaseio.com/posiciones");
+        //myFirebaseRef = new Firebase("https://appjj.firebaseio.com/posiciones");
+        myFirebaseRef = new Firebase("https://jldl.firebaseio.com/posiciones");
 
 
         myFirebaseRef.addChildEventListener(new ChildEventListener() {
