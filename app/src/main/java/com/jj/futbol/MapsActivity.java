@@ -41,7 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, View.OnClickListener, ChildEventListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, View.OnClickListener {
 
     public static final int PLACE_PICKER_REQUEST = 1;
     public static final int LISTA_PARTIDOS_REQUEST = 2;
@@ -58,7 +58,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
         /**
@@ -67,13 +68,88 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
          **/
         Firebase.setAndroidContext(this);
         myFirebaseRef = new Firebase("https://appjj.firebaseio.com/posiciones");
-        myFirebaseRef.addChildEventListener(this);
+
+
+        myFirebaseRef.addChildEventListener(new ChildEventListener() {
+
+            //onChildAdded() se llama para una vez para cada hijo existente de forma secuencial en el DataSnapshot al abrir la aplicacion por primera vez
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                //String nombre, direccion, lalitud, longitud, local, visitante;
+                String[] atributos;
+                Double lati = 0.0, longi = 0.0;
+                LatLng ll;
+
+                if (s == null) //'s' es el nombre de la key del elemento que se añadio en la llamada anterior
+                    s = "S";
+
+                String chorizo = (String) dataSnapshot.getValue();   //Saco el valor del nodo actual
+                atributos = chorizo.split("¡"); //Separo la cadena en dos (son las coordenadas de una posicion)
+                lati = Double.parseDouble(atributos[2].trim());
+                longi = Double.parseDouble(atributos[3].trim());
+                ll = new LatLng(lati,longi);
+                addMarca(mapa, ll, atributos[4] + " - "+ atributos[5], atributos[0], atributos[4]);   //Añado una marca al mapa con la posicion creada
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                //String nombre, direccion, lalitud, longitud, local, visitante;
+                String[] atributos;
+                Double lati = 0.0, longi = 0.0;
+                LatLng ll;
+
+
+                if (s == null) //'s' es el nombre de la key del elemento que se añadio en la llamada anterior
+                    s = "S";
+
+                String chorizo = (String) dataSnapshot.getValue();   //Saco el valor del nodo actual
+                atributos = chorizo.split("¡"); //Separo la cadena en dos (son las coordenadas de una posicion)
+                lati = Double.parseDouble(atributos[2].trim());
+                longi = Double.parseDouble(atributos[3].trim());
+                ll = new LatLng(lati,longi);
+                sustituyeMarca(mapa, ll, atributos[4] + " - "+ atributos[5], atributos[0], atributos[4]);   //Añado una marca al mapa con la posicion creada
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                //mapa.clear();
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+
+        //myFirebaseRef.child("message").setValue("Do you have data? You'll love Firebase.");
+//        myFirebaseRef.child("message").child("otro2").addValueEventListener(new ValueEventListener() { //Agrego un listener al dato llamado "message"
+//            @Override
+//            public void onDataChange(DataSnapshot snapshot) { //Cuando el valor del dato "message" cambia, se ejecuta este codigo
+//                System.out.println(snapshot.getValue());  //prints "Do you have data? You'll love Firebase."
+//                Toast toast = Toast.makeText(getBaseContext(), snapshot.getValue().toString(), Toast.LENGTH_LONG);
+//                toast.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+//                toast.show();
+//            }
+//
+//            @Override
+//            public void onCancelled(FirebaseError error) {
+//            }
+//        });
 
         /*Agrego al boton un Listener para que el boton me lleve a la Activity de PlacePicker al ser pulsado (onClick)*/
         final Button botonPlacePicker = (Button) findViewById(R.id.AbrirPlacePicker);
+        //final Button botonListaPartidos = (Button) findViewById(R.id.AbrirListaPartidos);
         botonPlacePicker.setOnClickListener(this);
-    }
+        //botonListaPartidos.setOnClickListener(this);
 
+
+    }
     public Marker addMarca(GoogleMap map, LatLng coordenadas, String titulo, String snippet, String icono){
         Log.i("AÑADIR", "Marca añadida");
         Bitmap b = cogeEscudo(icono);
@@ -121,9 +197,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             map.setOnMyLocationButtonClickListener(this);
         }
 
-        // Muevo la camara a Sevilla
+
+        // Add a marker in Sydney, Australia, and move the camera.
         LatLng sevilla = new LatLng(37.388986, -5.984540);
+        //Marker marca = addMarca(map, sevilla, "Marca en Sevilla");
         mueveCamara(map, sevilla);
+        //borraMarca(marca);
     }
 
 
@@ -189,7 +268,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             if (resultCode == RESULT_OK) {
                 Place place = PlacePicker.getPlace(data, this);
                 //String toastMsg = String.format("Place: %s, ID: %s, Direccion: %s", place.getName(), place.getId(), place.getAddress());
-                lugar = new Lugar(place.getId(), place.getAddress().toString(), place.getLatLng(), place.getName().toString(), new Partido());
+                lugar = new Lugar(place.getId(), place.getAddress().toString(), place.getLatLng(), place.getName().toString(), new Partido2());
                 //Toast.makeText(this, lugar.toString(), Toast.LENGTH_LONG).show();
                 Log.i("LUGAR", lugar.toString());
                 Intent i = new Intent(this, ListaPartidos.class );
@@ -200,11 +279,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (requestCode == LISTA_PARTIDOS_REQUEST) {
             if (resultCode == RESULT_OK) {
 
-                Partido partido = (Partido) data.getSerializableExtra("p");
+                Partido2 partido = (Partido2) data.getSerializableExtra("p");
                 //Toast.makeText(this, partido.toString(), Toast.LENGTH_LONG).show();
                 lugar.setPartido(partido);
                 Log.i("LUGAR", lugar.toString());
-                myFirebaseRef.child(lugar.getId()).setValue(lugar.getNombre() +"¡"+ lugar.getDireccion() +"¡"+ lugar.getCoordenadas().latitude +"¡"+ lugar.getCoordenadas().longitude +"¡"+ lugar.getPartido().getLocal() +"¡"+ lugar.getPartido().getVisitante() +"¡"+ lugar.getPartido().getDia() +"¡"+ lugar.getPartido().getHora());
+                myFirebaseRef.child(lugar.getId()).setValue(lugar.getNombre() +"¡"+ lugar.getDireccion() +"¡"+ lugar.getCoordenadas().latitude +"¡"+ lugar.getCoordenadas().longitude +"¡"+ lugar.getPartido().getLocal() +"¡"+ lugar.getPartido().getVisitante());
                 mueveCamara(mapa, lugar.getCoordenadas());
                 Toast.makeText(this, "Partido añadido correctamente", Toast.LENGTH_LONG).show();
             }
@@ -282,56 +361,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return b;
     }
 
-    @Override
-    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-        //String nombre, direccion, lalitud, longitud, local, visitante, dia, hora;
-        String[] atributos;
-        Double lati = 0.0, longi = 0.0;
-        LatLng ll;
-
-        if (s == null) //'s' es el nombre de la key del elemento que se añadio en la llamada anterior
-            s = "S";
-
-        String chorizo = (String) dataSnapshot.getValue();   //Saco el valor del nodo actual
-        atributos = chorizo.split("¡"); //Separo la cadena en dos (son las coordenadas de una posicion)
-        lati = Double.parseDouble(atributos[2].trim());
-        longi = Double.parseDouble(atributos[3].trim());
-        ll = new LatLng(lati,longi);
-        addMarca(mapa, ll, atributos[4] + " - "+ atributos[5], "En " + atributos[0] + " - " + atributos[6]+ " - " + atributos[7]+"h", atributos[4]);   //Añado una marca al mapa con la posicion creada
-    }
-
-    @Override
-    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-        //String nombre, direccion, lalitud, longitud, local, visitante;
-        String[] atributos;
-        Double lati = 0.0, longi = 0.0;
-        LatLng ll;
-
-        if (s == null) //'s' es el nombre de la key del elemento que se añadio en la llamada anterior
-            s = "S";
-
-        String chorizo = (String) dataSnapshot.getValue();   //Saco el valor del nodo actual
-        atributos = chorizo.split("¡"); //Separo la cadena en dos (son las coordenadas de una posicion)
-        lati = Double.parseDouble(atributos[2].trim());
-        longi = Double.parseDouble(atributos[3].trim());
-        ll = new LatLng(lati,longi);
-        sustituyeMarca(mapa, ll, atributos[4] + " - "+ atributos[5], atributos[0], atributos[4]);   //Añado una marca al mapa con la posicion creada
-    }
-
-    @Override
-    public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-    }
-
-    @Override
-    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-    }
-
-    @Override
-    public void onCancelled(FirebaseError firebaseError) {
-
-    }
 }
 
 
