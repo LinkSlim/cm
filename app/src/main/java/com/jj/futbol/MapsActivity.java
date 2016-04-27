@@ -13,8 +13,11 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.ChildEventListener;
@@ -42,7 +45,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, View.OnClickListener, ChildEventListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, View.OnClickListener, ChildEventListener, GoogleMap.InfoWindowAdapter {
 
     public static final int PLACE_PICKER_REQUEST = 1;
     public static final int LISTA_PARTIDOS_REQUEST = 2;
@@ -53,7 +56,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Firebase myFirebaseRef;
     private ArrayList<Marker> listaMarcas = new ArrayList<Marker>();
     public Lugar lugar = new Lugar();
+    /*Para personalizar las marcas*/
+    private View popup = null;
+    private LayoutInflater inflater = null;
+    String str;
 
+ /*   public MapsActivity(LayoutInflater inflater) {
+        this.inflater=inflater;
+
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +85,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         /*Agrego al boton un Listener para que el boton me lleve a la Activity de PlacePicker al ser pulsado (onClick)*/
         final Button botonPlacePicker = (Button) findViewById(R.id.AbrirPlacePicker);
         botonPlacePicker.setOnClickListener(this);
+
     }
 
     public Marker addMarca(GoogleMap map, LatLng coordenadas, String titulo, String snippet, String icono){
@@ -122,8 +134,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) ==
                         PackageManager.PERMISSION_GRANTED) {
-            //googleMap.setMyLocationEnabled(true);
-            //googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+
             map.setMyLocationEnabled(true);
             map.getUiSettings().setMyLocationButtonEnabled(true);
         } else {
@@ -138,6 +149,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Muevo la camara a Sevilla
         LatLng sevilla = new LatLng(37.388986, -5.984540);
         mueveCamara(map, sevilla);
+        map.setInfoWindowAdapter(this);
     }
 
 
@@ -341,6 +353,42 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onCancelled(FirebaseError firebaseError) {
 
+    }
+
+    /*InfoWindow(LayoutInflater inflater, String s) {
+
+        this.inflater = inflater;
+
+        str = s;
+    }*/
+
+    @Override
+    public View getInfoContents(Marker marker) {
+
+
+        if (popup == null) {
+            inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            popup = inflater.inflate(R.layout.entrada, null);
+        }
+
+        ImageView escudoLocal = (ImageView) popup.findViewById(R.id.imageEquipoLocal);
+        escudoLocal.setImageBitmap(cogeEscudo(marker.getTitle().split("-")[0].trim()));
+
+        TextView local = (TextView) popup.findViewById(R.id.textViewEquipoLocal);
+        local.setText(marker.getTitle().split("-")[0].trim());
+
+        TextView visitante = (TextView) popup.findViewById(R.id.textViewEquipoVisitante);
+        visitante.setText(marker.getTitle().split("-")[1].trim());
+
+        ImageView escudoVisitante = (ImageView) popup.findViewById(R.id.imageEquipoVisitante);
+        escudoVisitante.setImageBitmap(cogeEscudo(marker.getTitle().split("-")[1].trim()));
+
+        return popup;
+    }
+
+    @Override
+    public View getInfoWindow(Marker marker) {
+        return null;
     }
 }
 
