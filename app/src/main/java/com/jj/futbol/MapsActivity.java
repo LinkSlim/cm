@@ -1,5 +1,6 @@
 package com.jj.futbol;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -193,10 +194,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap map) {
         mapa = map;
 
-        map.setMyLocationEnabled(true); //Activo el boton de Mi Ubicacion
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) ==
+                        PackageManager.PERMISSION_GRANTED) {
+            //googleMap.setMyLocationEnabled(true);
+            //googleMap.getUiSettings().setMyLocationButtonEnabled(true);
+            map.setMyLocationEnabled(true);
+            map.getUiSettings().setMyLocationButtonEnabled(true);
+        } else {
+            Toast.makeText(this, R.string.common_google_play_services_network_error_text, Toast.LENGTH_LONG).show();
+        }
+
+        /*map.setMyLocationEnabled(true); //Activo el boton de Mi Ubicacion
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             map.setOnMyLocationButtonClickListener(this);
-        }
+        }*/
 
 
         // Add a marker in Sydney, Australia, and move the camera.
