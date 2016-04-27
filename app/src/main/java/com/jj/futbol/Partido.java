@@ -15,19 +15,25 @@ public class Partido implements Serializable{
     private String Local;
     private String Visitante;
     private Bitmap EscudoVisitante;
+    private String dia;
+    private String hora;
 
-    public Partido(Bitmap EscudoLocal, String Local, String Visitante, Bitmap EscudoVisitante) {
+    public Partido(Bitmap EscudoLocal, String Local, String Visitante, Bitmap EscudoVisitante, String dia, String hora) {
         this.EscudoLocal = EscudoLocal;
         this.Local = Local;
         this.Visitante = Visitante;
         this.EscudoVisitante = EscudoVisitante;
+        this.dia = dia;
+        this.hora = hora;
     }
 
-    public Partido(String local, String visitante) {
+    public Partido(String local, String visitante, String dia, String hora) {
         this.EscudoLocal = null;
         this.Local = local;
         this.Visitante = visitante;
         this.EscudoVisitante = null;
+        this.dia = dia;
+        this.hora = hora;
     }
 
     public Partido() {
@@ -35,6 +41,8 @@ public class Partido implements Serializable{
         this.Local = "";
         this.Visitante = "";
         this.EscudoVisitante = null;
+        this.dia = "";
+        this.hora = "";
     }
 
 
@@ -52,6 +60,14 @@ public class Partido implements Serializable{
 
     public Bitmap getEscudoVisitante() {
         return EscudoVisitante;
+    }
+
+    public String getDia() {
+        return dia;
+    }
+
+    public String getHora() {
+        return hora;
     }
 
     @Override

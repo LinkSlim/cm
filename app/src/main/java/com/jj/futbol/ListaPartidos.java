@@ -32,16 +32,16 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 public class ListaPartidos extends Activity{
 
-    private String imageHttpAddress = "http://thumb.resfu.com/img_data/escudos/medium/263.jpg?size=60x&amp;ext=png&amp;lossy=1&amp;1";
     public Set<Partido> listaPartidos = new HashSet<Partido>();
-    public Partido2 partidoSeleccionado;
+    public Partido partidoSeleccionado;
     public Intent output;
-    public String web = "";
+    public String web = "http://www.resultados-futbol.com/scripts/api/api.php?key=aac9f27d384e2a552775d8ce3a4698d8&format=json&tz=Europe/Madrid&lang=es&rm=1&req=tv_channel_matches&init=0&filter=Liga%20BBVA";
     public Bitmap escudoLocal, escudoVisitante;
     public ProgressDialog pDialog;
 
@@ -52,12 +52,9 @@ public class ListaPartidos extends Activity{
         setTitle(getResources().getText(R.string.title_lista_partidos));  //Cambio el titulo de la pantalla
 
         //Cojo los partido de la fecha de hoy
-        web = "http://www.resultados-futbol.com/scripts/api/api.php?key=aac9f27d384e2a552775d8ce3a4698d8&format=json&tz=Europe/Madrid&lang=es&rm=1&req=tv_channel_matches&init=0&filter=Liga%20BBVA";
+
         DescargaJson descargaJson = new DescargaJson();
         descargaJson.execute(web);
-
-
-
     }
 
 
@@ -198,7 +195,7 @@ public class ListaPartidos extends Activity{
         }
 
         protected void onPostExecute(String result) {
-            String canal = "", local = "", visitor = "", competition_name = "", local_shield = "", visitor_shield = "", hour = "", minute = "";
+            String canal = "", local = "", visitor = "", competition_name = "", local_shield = "", visitor_shield = "", date = "", hour = "", minute = "";
 
             //CargaImagenes descargaImagen = new CargaImagenes();
             JSONObject tv_match, match;
@@ -220,13 +217,16 @@ public class ListaPartidos extends Activity{
                         competition_name = match.getString("competition_name");
                         local_shield = match.getString("local_shield");
                         visitor_shield = match.getString("visitor_shield");
+                        date = match.getString("date");
+                        /*SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                        date = sdf.parse(match.getString("date")).toString();*/
                         hour = match.getString("hour");
                         minute = match.getString("minute");
 
                         //Descargo los escudos
                         //CargaImagenes descargaImagen = new CargaImagenes();
                         //descargaImagen.execute(local_shield, visitor_shield);
-                        partido = new Partido(cogeEscudo(local), local, visitor, cogeEscudo(visitor));
+                        partido = new Partido(cogeEscudo(local), local, visitor, cogeEscudo(visitor), date, hour+":"+minute);
                         if(!listaPartidos.contains(partido)){
                             listaPartidos.add(partido);
                         }
@@ -262,10 +262,10 @@ public class ListaPartidos extends Activity{
                     @Override
                     public void onItemClick(AdapterView<?> pariente, View view, int posicion, long id) {
                         Partido elegido = (Partido) pariente.getItemAtPosition(posicion);
-                        partidoSeleccionado = new Partido2(elegido.getLocal(), elegido.getVisitante());
+                        partidoSeleccionado = new Partido(elegido.getLocal(), elegido.getVisitante(), elegido.getDia(), elegido.getHora());
                         //Toast.makeText(ListaPartidos.this, texto, Toast.LENGTH_LONG).show();
                         Log.i("PARTIDO", partidoSeleccionado.toString());
-                        output = new Intent(getApplicationContext(), Partido2.class);
+                        output = new Intent(getApplicationContext(), Partido.class);
                         output.putExtra("p", partidoSeleccionado);
                         setResult(RESULT_OK, output);
                         finish();
