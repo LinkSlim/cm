@@ -331,12 +331,6 @@ public class ListaPartidos extends Activity{
         protected void onPostExecute(ArrayList<Bitmap> result) {
             super.onPostExecute(result);
 
-            /*listaPartidos.add(new Partido(BitmapFactory.decodeResource(getResources(), R.drawable.Barcelona), "Arsenal1", "Arsenal2", BitmapFactory.decodeResource(getResources(), R.drawable.Arsenal)));
-            listaPartidos.add(new Partido(BitmapFactory.decodeResource(getResources(), R.drawable.Arsenal), "FC Barcelona", "FC Barcelona B", BitmapFactory.decodeResource(getResources(), R.drawable.Barcelona)));
-            listaPartidos.add(new Partido(BitmapFactory.decodeResource(getResources(), R.drawable.Barcelona), "Antena3", "La Sexta", BitmapFactory.decodeResource(getResources(), R.drawable.Antena3)));*/
-            /*listaPartidos.add(new Partido(result, "Sevilla", "Betis", result));
-            listaPartidos.add(new Partido(result, "Madrid", "Barsa", result));
-            listaPartidos.add(new Partido(result, "Barsa", "Getafe", result));*/
             escudoLocal = result.get(0);
             escudoVisitante = result.get(1);
             //pDialog.dismiss();
