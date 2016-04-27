@@ -88,16 +88,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    public Marker addMarca(GoogleMap map, LatLng coordenadas, String titulo, String snippet, String icono){
+    public Marker addMarca(GoogleMap map, LatLng coordenadas, String equipoLocal, String equipoVisitante, String sitio, String fecha, String hora, String icono){
         Log.i("AÑADIR", "Marca añadida");
         Bitmap b = cogeEscudo(icono);
-        Marker marker = map.addMarker(new MarkerOptions().position(coordenadas).title(titulo).snippet(snippet).icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b, 30, 30, false))));
+        Marker marker = map.addMarker(new MarkerOptions().position(coordenadas).title(equipoLocal+"¡"+equipoVisitante).snippet(sitio+"¡"+fecha+"¡"+hora).icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b, 30, 30, false))));
         listaMarcas.add(marker);
         return marker;
     }
 
-    public void sustituyeMarca(GoogleMap map, LatLng coordenadas, String titulo, String snippet, String icono){
-        Log.i("JESUS", "Marca sustituida");
+    public void sustituyeMarca(GoogleMap map, LatLng coordenadas, String equipoLocal, String equipoVisitante, String sitio, String fecha, String hora, String icono){
         Bitmap b = cogeEscudo(icono);
         Boolean existe = false;
         Marker marcaAEliminar = null;
@@ -113,12 +112,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if(existe)
             listaMarcas.remove(marcaAEliminar);
 
-        addMarca(map, coordenadas, titulo, snippet, icono);
+        addMarca(map, coordenadas, equipoLocal, equipoVisitante, sitio, fecha, hora, icono);
+        Log.i("JESUS", "Marca sustituida");
     }
 
     public void mueveCamara(GoogleMap map, LatLng coordenadas){
         map.moveCamera(CameraUpdateFactory.newLatLng(coordenadas));
-        Log.i("MOVER", "Camara movida");
+        Log.i("JESUS", "Camara movida");
     }
 
     public void borraMarca(Marker marker){
@@ -319,7 +319,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         lati = Double.parseDouble(atributos[2].trim());
         longi = Double.parseDouble(atributos[3].trim());
         ll = new LatLng(lati,longi);
-        addMarca(mapa, ll, atributos[4] + " - "+ atributos[5], "En " + atributos[0] + " - " + atributos[6]+ " - " + atributos[7]+"h", atributos[4]);   //Añado una marca al mapa con la posicion creada
+        addMarca(mapa, ll, atributos[4], atributos[5], atributos[0], atributos[6], atributos[7]+"h", atributos[4]);   //Añado una marca al mapa con la posicion creada
     }
 
     @Override
@@ -337,7 +337,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         lati = Double.parseDouble(atributos[2].trim());
         longi = Double.parseDouble(atributos[3].trim());
         ll = new LatLng(lati,longi);
-        sustituyeMarca(mapa, ll, atributos[4] + " - "+ atributos[5], atributos[0], atributos[4]);   //Añado una marca al mapa con la posicion creada
+        sustituyeMarca(mapa, ll, atributos[4], atributos[5], atributos[0], atributos[6], atributos[7]+"h", atributos[4]);   //Añado una marca al mapa con la posicion creada
     }
 
     @Override
@@ -372,16 +372,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         ImageView escudoLocal = (ImageView) popup.findViewById(R.id.imageEquipoLocal);
-        escudoLocal.setImageBitmap(cogeEscudo(marker.getTitle().split("-")[0].trim()));
+        escudoLocal.setImageBitmap(cogeEscudo(marker.getTitle().split("¡")[0].trim()));
 
         TextView local = (TextView) popup.findViewById(R.id.textViewEquipoLocal);
-        local.setText(marker.getTitle().split("-")[0].trim());
+        local.setText(marker.getTitle().split("¡")[0].trim());
 
         TextView visitante = (TextView) popup.findViewById(R.id.textViewEquipoVisitante);
-        visitante.setText(marker.getTitle().split("-")[1].trim());
+        visitante.setText(marker.getTitle().split("¡")[1].trim());
 
         ImageView escudoVisitante = (ImageView) popup.findViewById(R.id.imageEquipoVisitante);
-        escudoVisitante.setImageBitmap(cogeEscudo(marker.getTitle().split("-")[1].trim()));
+        escudoVisitante.setImageBitmap(cogeEscudo(marker.getTitle().split("¡")[1].trim()));
+
+        TextView fecha = (TextView) popup.findViewById(R.id.textViewFecha);
+        fecha.setText(marker.getSnippet().split("¡")[1].trim());
+
+        TextView hora = (TextView) popup.findViewById(R.id.textViewHora);
+        hora.setText(marker.getSnippet().split("¡")[2].trim());
 
         return popup;
     }

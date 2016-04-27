@@ -255,6 +255,12 @@ public class ListaPartidos extends Activity{
 
                         ImageView escudoVisitante = (ImageView) view.findViewById(R.id.imageEquipoVisitante);
                         escudoVisitante.setImageBitmap(((Partido) entrada).getEscudoVisitante());
+
+                        TextView fecha = (TextView) view.findViewById(R.id.textViewFecha);
+                        fecha.setText(((Partido) entrada).getDia());
+
+                        TextView hora = (TextView) view.findViewById(R.id.textViewHora);
+                        hora.setText(((Partido) entrada).getHora());
                     }
                 });
 

@@ -24,7 +24,7 @@
         android:id="@+id/textViewEquipoLocal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Small Text"
+        android:text="local"
         android:textColor="@color/colorPrimaryDark"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_toRightOf="@id/imageEquipoLocal"
@@ -53,7 +53,7 @@
         android:id="@+id/textViewEquipoVisitante"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Small Text"
+        android:text="visitante"
         android:textColor="@color/colorPrimaryDark"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_toLeftOf="@id/imageEquipoVisitante"
@@ -65,6 +65,23 @@
 
         android:layout_centerVertical="true" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="fecha"
+        android:id="@+id/textViewFecha"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="hora"
+        android:id="@+id/textViewHora"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp" />
 
 
 </RelativeLayout>
