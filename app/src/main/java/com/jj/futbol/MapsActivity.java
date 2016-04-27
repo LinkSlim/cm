@@ -182,14 +182,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             Toast.LENGTH_LONG)
                             .show();
                 }
-
+                break;
 // END_INCLUDE(intent)
 
-                break;
 
-/*            case R.id.AbrirListaPartidos:
-                Intent i = new Intent(this, ListaPartidos.class );
-                startActivityForResult(i, LISTA_PARTIDOS_REQUEST);*/
 
             default:
                 break;
