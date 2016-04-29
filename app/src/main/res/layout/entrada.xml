@@ -25,6 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="local"
+        android:textStyle="bold"
         android:textColor="@color/colorPrimaryDark"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_toRightOf="@id/imageEquipoLocal"
@@ -54,6 +55,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="visitante"
+        android:textStyle="bold"
         android:textColor="@color/colorPrimaryDark"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_toLeftOf="@id/imageEquipoVisitante"
@@ -72,7 +74,7 @@
         android:text="fecha"
         android:id="@+id/textViewFecha"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="5dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -81,7 +83,26 @@
         android:text="hora"
         android:id="@+id/textViewHora"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp" />
+        android:layout_marginTop="20dp" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text=""
+        android:textStyle="bold"
+        android:id="@+id/textViewSitio"
+        android:layout_marginTop="60dp"
+        android:textAlignment="center" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text=""
+        android:id="@+id/textViewDireccion"
+        android:layout_marginTop="80dp"
+        android:textAlignment="center" />
 
 
 </RelativeLayout>

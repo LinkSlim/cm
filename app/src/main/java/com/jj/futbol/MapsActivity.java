@@ -88,15 +88,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    public Marker addMarca(GoogleMap map, LatLng coordenadas, String equipoLocal, String equipoVisitante, String sitio, String fecha, String hora, String icono){
+    public Marker addMarca(GoogleMap map, LatLng coordenadas, String equipoLocal, String equipoVisitante, String sitio, String direccion, String fecha, String hora, String icono){
         Log.i("AÑADIR", "Marca añadida");
         Bitmap b = cogeEscudo(icono);
-        Marker marker = map.addMarker(new MarkerOptions().position(coordenadas).title(equipoLocal+"¡"+equipoVisitante).snippet(sitio+"¡"+fecha+"¡"+hora).icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b, 30, 30, false))));
+        Marker marker = map.addMarker(new MarkerOptions().position(coordenadas).title(equipoLocal+"¡"+equipoVisitante).snippet(sitio+"¡"+direccion+"¡"+fecha+"¡"+hora).icon(BitmapDescriptorFactory.fromBitmap(Bitmap.createScaledBitmap(b, 30, 30, false))));
         listaMarcas.add(marker);
         return marker;
     }
 
-    public void sustituyeMarca(GoogleMap map, LatLng coordenadas, String equipoLocal, String equipoVisitante, String sitio, String fecha, String hora, String icono){
+    public void sustituyeMarca(GoogleMap map, LatLng coordenadas, String equipoLocal, String equipoVisitante, String sitio, String direccion, String fecha, String hora, String icono){
         Bitmap b = cogeEscudo(icono);
         Boolean existe = false;
         Marker marcaAEliminar = null;
@@ -112,7 +112,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if(existe)
             listaMarcas.remove(marcaAEliminar);
 
-        addMarca(map, coordenadas, equipoLocal, equipoVisitante, sitio, fecha, hora, icono);
+        addMarca(map, coordenadas, equipoLocal, equipoVisitante, sitio, direccion, fecha, hora, icono);
         Log.i("JESUS", "Marca sustituida");
     }
 
@@ -228,7 +228,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Log.i("LUGAR", lugar.toString());
                 myFirebaseRef.child(lugar.getId()).setValue(lugar.getNombre() +"¡"+ lugar.getDireccion() +"¡"+ lugar.getCoordenadas().latitude +"¡"+ lugar.getCoordenadas().longitude +"¡"+ lugar.getPartido().getLocal() +"¡"+ lugar.getPartido().getVisitante() +"¡"+ lugar.getPartido().getDia() +"¡"+ lugar.getPartido().getHora());
                 mueveCamara(mapa, lugar.getCoordenadas());
-                Toast.makeText(this, "Partido añadido correctamente", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "PARTIDO AÑADIDO AL MAPA", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -306,7 +306,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-        //String nombre, direccion, lalitud, longitud, local, visitante, dia, hora;
+        //String sitio, direccion, lalitud, longitud, local, visitante, dia, hora;
         String[] atributos;
         Double lati = 0.0, longi = 0.0;
         LatLng ll;
@@ -319,7 +319,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         lati = Double.parseDouble(atributos[2].trim());
         longi = Double.parseDouble(atributos[3].trim());
         ll = new LatLng(lati,longi);
-        addMarca(mapa, ll, atributos[4], atributos[5], atributos[0], atributos[6], atributos[7]+"h", atributos[4]);   //Añado una marca al mapa con la posicion creada
+        addMarca(mapa, ll, atributos[4], atributos[5], atributos[0], atributos[1], atributos[6], atributos[7]+"h", atributos[4]);   //Añado una marca al mapa con la posicion creada
     }
 
     @Override
@@ -337,7 +337,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         lati = Double.parseDouble(atributos[2].trim());
         longi = Double.parseDouble(atributos[3].trim());
         ll = new LatLng(lati,longi);
-        sustituyeMarca(mapa, ll, atributos[4], atributos[5], atributos[0], atributos[6], atributos[7]+"h", atributos[4]);   //Añado una marca al mapa con la posicion creada
+        sustituyeMarca(mapa, ll, atributos[4], atributos[5], atributos[0], atributos[1], atributos[6], atributos[7]+"h", atributos[4]);   //Añado una marca al mapa con la posicion creada
     }
 
     @Override
@@ -384,10 +384,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         escudoVisitante.setImageBitmap(cogeEscudo(marker.getTitle().split("¡")[1].trim()));
 
         TextView fecha = (TextView) popup.findViewById(R.id.textViewFecha);
-        fecha.setText(marker.getSnippet().split("¡")[1].trim());
+        fecha.setText(marker.getSnippet().split("¡")[2].trim());
 
         TextView hora = (TextView) popup.findViewById(R.id.textViewHora);
-        hora.setText(marker.getSnippet().split("¡")[2].trim());
+        hora.setText(marker.getSnippet().split("¡")[3].trim());
+
+        TextView sitio = (TextView) popup.findViewById(R.id.textViewSitio);
+        sitio.setText(marker.getSnippet().split("¡")[0].trim());
+
+        TextView direccion = (TextView) popup.findViewById(R.id.textViewDireccion);
+        direccion.setText(marker.getSnippet().split("¡")[1].trim());
 
         return popup;
     }
