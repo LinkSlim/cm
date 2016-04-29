@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Football Spectator</string>
-    <string name="title_activity_maps">Mapa de Partidos</string>
+    <string name="title_activity_maps">Football Watcher</string>
     <string name="title_lista_partidos">Selecciona un partido</string>
 </resources>
