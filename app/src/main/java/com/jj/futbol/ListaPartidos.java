@@ -217,9 +217,7 @@ public class ListaPartidos extends Activity{
                         competition_name = match.getString("competition_name");
                         local_shield = match.getString("local_shield");
                         visitor_shield = match.getString("visitor_shield");
-                        date = match.getString("date");
-                        /*SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                        date = sdf.parse(match.getString("date")).toString();*/
+                        date = fechaAFormatoEspanol(match.getString("date"));
                         hour = match.getString("hour");
                         minute = match.getString("minute");
 
@@ -235,8 +233,7 @@ public class ListaPartidos extends Activity{
 
                 }
 
-                Toast.makeText(getBaseContext(), "JSON PARSEADO!", Toast.LENGTH_SHORT).show();
-                Log.i("JESUS", "ESTOY EN ONPOSTEXECUTE");
+                Log.i("JESUS", "ESTOY EN ONPOSTEXECUTE Y SE HA PARSEADO EL JSON");
 
                 //pDialog.dismiss();
 
@@ -284,6 +281,11 @@ public class ListaPartidos extends Activity{
                 Log.d("JESUS", "HUBO UNA EXCEPCION");
             }
 
+        }
+
+        private String fechaAFormatoEspanol(String fecha){
+            Date d = new Date(fecha);
+            return new SimpleDateFormat("dd/MM/yyyy").format(d).toString();
         }
     }
 
