@@ -41,7 +41,7 @@ public class ListaPartidos extends Activity{
     public Set<Partido> listaPartidos = new HashSet<Partido>();
     public Partido partidoSeleccionado;
     public Intent output;
-    public String web = "http://www.resultados-futbol.com/scripts/api/api.php?key=aac9f27d384e2a552775d8ce3a4698d8&format=json&tz=Europe/Madrid&lang=es&rm=1&req=tv_channel_matches&init=0&filter=Liga%20BBVA";
+    public String web = "http://www.resultados-futbol.com/scripts/api/api.php?key=fd1a1fff045d86c4971afcdea01cbc7e&format=json&tz=Europe/Madrid&lang=es&rm=1&req=tv_channel_matches&init=0&filter=Liga%20BBVA";
     public Bitmap escudoLocal, escudoVisitante;
     public ProgressDialog pDialog;
 
